@@ -4,6 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_app/domain/models/items_model/item_model.dart';
+import 'package:todo_app/presentation/blocs/cubits/counter_cubit.dart';
 import 'package:todo_app/presentation/blocs/items/item_bloc.dart';
 import 'package:todo_app/presentation/view/update_task_screen.dart';
 import 'package:todo_app/presentation/widgets/item_widget.dart';
@@ -27,8 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
-    return Scaffold(
-      body: RefreshIndicator(
+    return  RefreshIndicator(
         onRefresh: _refresh,
         child: Column(
           children: [
@@ -36,7 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
             BlocConsumer<ItemBloc, ItemState>(
               listener: (BuildContext context, Object? state) {
                 if (state is ItemSuccfullyDeletedState) {
-                  toastFunc(context, state.success, 'assets/icons/correct.svg');
+                  toastFunc(
+                      context, state.success, 'assets/icons/correct.svg');
                 }
               },
               builder: (BuildContext context, state) {
@@ -54,46 +55,38 @@ class _HomeScreenState extends State<HomeScreen> {
                         DateTime nowTime = DateTime.now();
                         final DateFormat format = DateFormat('yyyy-MM-dd');
                         final DateFormat format1 =
-                            DateFormat('yyyy-MM-dd HH:mm:ss');
+                        DateFormat('yyyy-MM-dd HH:mm:ss');
                         final alertTime = format1.parse(
-                            '${nowTime.year}-${nowTime.month}-${nowTime.day} ${state.itemModelList[index].alert!}');
+                            '${nowTime.year}-${nowTime.month}-${nowTime
+                                .day} ${state.itemModelList[index].alert!}');
 
                         DateTime startTime =
-                            format.parse(state.itemModelList[index].endDate!);
+                        format.parse(state.itemModelList[index].endDate!);
                         DateTime endTime =
-                            format.parse(state.itemModelList[index].startDate!);
+                        format.parse(state.itemModelList[index].startDate!);
                         if (nowTime.isBefore(endTime) &&
                             nowTime.isAfter(startTime)) {
-
                           if (nowTime.isBefore(alertTime)) {
-
-
                             LocalNotificationService().showScheduledTime(
                                 alertTime, state.itemModelList[index]);
                           } else {
-
-
                             LocalNotificationService().showScheduledTime(
-                                DateTime(nowTime.year,nowTime.month,nowTime.day,nowTime.hour,nowTime.minute+3), state.itemModelList[index]);
+                                DateTime(
+                                    nowTime.year, nowTime.month, nowTime.day,
+                                    nowTime.hour, nowTime.minute + 3),
+                                state.itemModelList[index]);
                           }
                         } else if (nowTime.isBefore(startTime)) {
-
-
                           if (nowTime.isBefore(alertTime)) {
-
-
                             LocalNotificationService().showScheduledTime(
                                 alertTime, state.itemModelList[index]);
                           } else {
-
-
                             LocalNotificationService().showScheduledTime(
-                                DateTime(nowTime.year,nowTime.month,nowTime.day,nowTime.hour,nowTime.minute+3), state.itemModelList[index]);
+                                DateTime(
+                                    nowTime.year, nowTime.month, nowTime.day,
+                                    nowTime.hour, nowTime.minute + 3),
+                                state.itemModelList[index]);
                           }
-
-
-
-
                         }
 
                         return Slidable(
@@ -115,13 +108,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   builder: (context) =>
                                                       UpdateScreen(
                                                           itemModel: state
-                                                                  .itemModelList[
-                                                              index])));
+                                                              .itemModelList[
+                                                          index])));
                                         },
                                         style: ElevatedButton.styleFrom(
                                           shape: const CircleBorder(),
                                           backgroundColor:
-                                              Color.fromRGBO(196, 206, 245, 1),
+                                          Color.fromRGBO(196, 206, 245, 1),
                                           padding: const EdgeInsets.all(7),
                                         ),
                                         child: const Icon(
@@ -145,16 +138,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                         onPressed: () {
                                           // Slidable.of(context)!.close();
                                           print(
-                                              'Tapped index ${state.itemModelList[index].id}');
+                                              'Tapped index ${state
+                                                  .itemModelList[index].id}');
                                           context.read<ItemBloc>().add(
                                               DeleteIdItemEvent(
-                                                  id: state.itemModelList[index]
+                                                  id: state
+                                                      .itemModelList[index]
                                                       .id));
                                         },
                                         style: ElevatedButton.styleFrom(
                                           shape: CircleBorder(),
                                           backgroundColor:
-                                              Color.fromRGBO(255, 207, 207, 1),
+                                          Color.fromRGBO(255, 207, 207, 1),
                                           padding: EdgeInsets.all(7),
                                         ),
                                         child: const Icon(
@@ -177,21 +172,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 } else if (state is ItemInitial || state is ItemEmpty) {
                   return Expanded(
                       child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset('assets/images/noTask.svg'),
-                      const SizedBox(
-                        height: 70,
-                      ),
-                      Text(
-                        AllText.noTask,
-                        style: customStyle.copyWith(
-                            color: const Color.fromRGBO(85, 78, 143, 1),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 22),
-                      )
-                    ],
-                  ));
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset('assets/images/noTask.svg'),
+                          const SizedBox(
+                            height: 70,
+                          ),
+                          Text(
+                            AllText.noTask,
+                            style: customStyle.copyWith(
+                                color: const Color.fromRGBO(85, 78, 143, 1),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 22),
+                          )
+                        ],
+                      ));
                 } else if (state is ItemError) {
                   return Center(
                     child: Text(state.error),
@@ -202,8 +197,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-      ),
-    );
+      )
+    ;
   }
 }
 

@@ -64,7 +64,7 @@ class LocalNotificationService {
     print('itemmodel ${itemModel.startDate}, ${itemModel.alert}');
     final DateFormat format=DateFormat("yyyy-MM-dd HH:mm:ss");
 
-    final DateTime dateTime1=format.parse(itemModel.startDate!+' '+itemModel.alert!);
+    final DateTime dateTime1=format.parse('${itemModel.startDate!} ${itemModel.alert!}');
     flutterLocalNotificationsPlugin.zonedSchedule(
         androidAllowWhileIdle: true,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
